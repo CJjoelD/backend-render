@@ -7,14 +7,22 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-// Ruta base
 app.get("/", (req, res) => {
   res.json({ mensaje: "API funcionando correctamente 🚀" });
 });
 
-// 🔹 Simulación de usuarios
+/* 👇 ESTE ENDPOINT ES CLAVE */
+app.get("/mensaje", (req, res) => {
+  res.json({
+    titulo: "Mensaje desde el Backend 🚀",
+    contenido: "Este mensaje fue enviado dinámicamente desde Render",
+    fecha: new Date().toLocaleString()
+  });
+});
+
+/* 👇 USUARIOS */
 app.get("/usuarios", (req, res) => {
-  const usuarios = [
+  res.json([
     {
       id: 1,
       nombre: "Ana Pérez",
@@ -30,18 +38,8 @@ app.get("/usuarios", (req, res) => {
       rol: "Usuario",
       estado: "Inactivo",
       fechaRegistro: "2025-11-20"
-    },
-    {
-      id: 3,
-      nombre: "María López",
-      correo: "maria.lopez@email.com",
-      rol: "Usuario",
-      estado: "Activo",
-      fechaRegistro: "2025-12-15"
     }
-  ];
-
-  res.json(usuarios);
+  ]);
 });
 
 app.listen(PORT, () => {
