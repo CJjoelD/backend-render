@@ -7,39 +7,40 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-app.get("/", (req, res) => {
-  res.json({ mensaje: "API funcionando correctamente 🚀" });
+/* Datos en memoria (simulan una BD) */
+let productos = [
+  { id: 1, nombre: "Arroz 1kg", precio: 1.25, stock: 50 },
+  { id: 2, nombre: "Leche 1L", precio: 0.90, stock: 30 }
+];
+
+/* Ver productos */
+app.get("/productos", (req, res) => {
+  res.json(productos);
 });
 
-/* 👇 ESTE ENDPOINT ES CLAVE */
-app.get("/mensaje", (req, res) => {
+/* Agregar producto */
+app.post("/productos", (req, res) => {
+  const { nombre, precio, stock } = req.body;
+
+  if (!nombre || !precio || !stock) {
+    return res.status(400).json({
+      error: "Todos los campos son obligatorios"
+    });
+  }
+
+  const nuevoProducto = {
+    id: productos.length + 1,
+    nombre,
+    precio,
+    stock
+  };
+
+  productos.push(nuevoProducto);
+
   res.json({
-    titulo: "Mensaje desde el Backend 🚀",
-    contenido: "Este mensaje fue enviado dinámicamente desde Render",
-    fecha: new Date().toLocaleString()
+    mensaje: "Producto agregado correctamente ✅",
+    producto: nuevoProducto
   });
-});
-
-/* 👇 USUARIOS */
-app.get("/usuarios", (req, res) => {
-  res.json([
-    {
-      id: 1,
-      nombre: "Ana Pérez",
-      correo: "ana.perez@email.com",
-      rol: "Administrador",
-      estado: "Activo",
-      fechaRegistro: "2025-12-01"
-    },
-    {
-      id: 2,
-      nombre: "Carlos Gómez",
-      correo: "carlos.gomez@email.com",
-      rol: "Usuario",
-      estado: "Inactivo",
-      fechaRegistro: "2025-11-20"
-    }
-  ]);
 });
 
 app.listen(PORT, () => {
